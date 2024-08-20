@@ -1,11 +1,15 @@
 mod steps;
+mod configuration;
+use clap::Parser;
+use configuration::Configuration;
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
     tracing_subscriber::fmt::init();
 
     dagger_sdk::connect(|client| async move {
-        steps::echo(&client, "What is your name?").await?;
+        let Configuration { port } = Configuration::parse();
+        steps::echo(&client, &port.to_string()).await?;
         Ok(())
     })
     .await?;
