@@ -1,16 +1,16 @@
 use shared::steps;
-mod configuration;
+mod args;
 use clap::Parser;
-use configuration::Configuration;
+use args::Args;
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
     tracing_subscriber::fmt::init();
 
     dagger_sdk::connect(|client| async move {
-        let Configuration { port, base_image } = Configuration::parse();
-        steps::utils::echo(&client, &base_image, &port.to_string()).await?;
-        steps::utils::echo(&client, &base_image, "Fuck you bro").await?;
+        let args = Args::parse();
+        steps::utils::echo(&client, &args.base_image, &args.port.to_string()).await?;
+        steps::utils::echo(&client, &args.base_image, "Fuck you bro").await?;
         Ok(())
     })
     .await?;
