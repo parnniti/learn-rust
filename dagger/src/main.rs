@@ -8,8 +8,8 @@ async fn main() -> eyre::Result<()> {
     tracing_subscriber::fmt::init();
 
     dagger_sdk::connect(|client| async move {
-        let Configuration { port } = Configuration::parse();
-        steps::echo(&client, &port.to_string()).await?;
+        let Configuration { port, base_image } = Configuration::parse();
+        steps::utils::echo(&client, base_image, &port.to_string()).await?;
         Ok(())
     })
     .await?;
