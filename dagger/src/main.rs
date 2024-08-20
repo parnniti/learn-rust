@@ -1,4 +1,5 @@
-use shared::steps;
+use shared::Client;
+use shared::steps::utils::Utils;
 mod args;
 use clap::Parser;
 use args::Args;
@@ -9,8 +10,8 @@ async fn main() -> eyre::Result<()> {
 
     dagger_sdk::connect(|client| async move {
         let args = Args::parse();
-        steps::utils::echo(&client, &args.base_image, &args.port.to_string()).await?;
-        steps::utils::echo(&client, &args.base_image, "Fuck you bro").await?;
+        let client = Client::new(client);
+        client.echo(&args.base_image, "Test").await?;
         Ok(())
     })
     .await?;

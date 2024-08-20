@@ -1,14 +1,7 @@
-use dagger_sdk::Query;
-use eyre::{Result, Report};
+use eyre::{Result, Error};
 
-pub async fn echo(client: &Query, image: &String, message: &str) -> Result<(), Report> {
-    let output = client
-        .container()
-        .from(image)
-        .with_exec(vec!["echo", message])
-        .stdout()
-        .await?;
-
-    println!("{}", output);
-    Ok(())
+#[trait_variant::make(Send)]
+pub trait Utils {
+    async fn echo(&self, image: &str, message: &str) -> Result<(), Error>;
+    async fn sh(&self, image: &str, script: &str) -> Result<(), Error>;
 }
